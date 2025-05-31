@@ -27,7 +27,7 @@ This project demonstrates essential PHP functionalities including CRUD operation
 
 ### Screenshot
 
-![](./bloghub.png.jpg)
+![](./bloghub.png)
 
 ### Links
 
