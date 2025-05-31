@@ -31,7 +31,7 @@ This project demonstrates essential PHP functionalities including CRUD operation
 
 ### Links
 
-- Solution URL: [View Code](https://github.com/Ramelzkie96/sneakers.git)
+- Solution URL: [View Code](https://github.com/Ramelzkie96/bloghub.git)
 - Live Site URL: [Live Site](https://bloghub-website.infinityfreeapp.com/index.php)
 
 ## My process
