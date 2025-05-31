@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../../config/config.php'; ?>
 <?php require "../layouts/header.php"; ?>
 <?php require "../../config/config.php"; ?>
 
@@ -6,7 +7,7 @@
 
 
     if(!isset($_SESSION['adminname'])) {
-      header("location: http://localhost/clean-blog/admin-panel/admins/login-admins.php");
+      header("location: " . BASE_URL . "admin-panel/admins/login-admins.php");
     }
 
 
@@ -22,7 +23,7 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title mb-4 d-inline">Admins</h5>
-             <a  href="http://localhost/clean-blog/admin-panel/admins/create-admins.php" class="btn btn-primary mb-4 text-center float-right">Create Admins</a>
+             <a  href=<?php echo BASE_URL; ?>admin-panel/admins/create-admins.php" class="btn btn-primary mb-4 text-center float-right">Create Admins</a>
               <table class="table">
                 <thead>
                   <tr>

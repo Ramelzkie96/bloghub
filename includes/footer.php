@@ -1,4 +1,4 @@
-   
+<?php require_once __DIR__ . '/../config/config.php'; ?>
         </div>
     <!-- Footer-->
         <footer class="border-top">
@@ -31,7 +31,7 @@
                                 </a>
                             </li>
                         </ul>
-                        <div class="small text-center text-muted fst-italic">Copyright &copy; Your Website 2022</div>
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; BlogHub 2023</div>
                     </div>
                 </div>
             </div>
@@ -39,6 +39,6 @@
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
-        <script src="http://localhost/clean-blog/js/scripts.js"></script>
+        <script src="<?php echo BASE_URL; ?>js/scripts.js"></script>
     </body>
 </html>

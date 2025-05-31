@@ -1,100 +1,63 @@
-<?php require "../includes/header.php"; ?>
-<?php require "../config/config.php"; ?>
+<?php require_once __DIR__ . '/../config/config.php'; ?>
+<?php
+session_start(); // Start the session
+require "../config/config.php";
 
+// ✅ Redirect to index if already logged in
+if (isset($_SESSION['username'])) {
+    header("location: " . BASE_URL . "index.php");
+    exit();
+}
 
-<?php 
+// ✅ Handle login form submission
+if (isset($_POST['submit'])) {
+    if (empty($_POST['email']) || empty($_POST['password'])) {
+        $error = "Enter data into the inputs";
+    } else {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
 
+        $login = $conn->prepare("SELECT * FROM users WHERE email = :email");
+        $login->execute(['email' => $email]);
+        $row = $login->fetch(PDO::FETCH_ASSOC);
 
-    //check for the submit
+        if ($login->rowCount() > 0 && password_verify($password, $row['mypassword'])) {
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['user_id'] = $row['id'];
 
-    //take the data
-
-    //write our query
-
-    //execute and then fetch
-
-    //do our rowCount
-
-    //to do our password_verify + redirect to the index page
-
-    if(isset($_SESSION['username'])) {
-      header("location: http://localhost/clean-blog/index.php");
-    }
-
-    if(isset($_POST['submit'])) {
-        if($_POST['email'] == '' OR $_POST['password'] == '') {
-            echo "<div class='alert alert-danger  text-center  role='alert'>
-                  enter data into the inputs
-              </div>";
+            // ✅ Successful login, redirect now
+            header("location: " . BASE_URL . "index.php");
+            exit();
         } else {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-
-            $login = $conn->query("SELECT * FROM users WHERE email = '$email'");
-
-            $login->execute();
-
-            $row = $login->FETCH(PDO::FETCH_ASSOC);
-
-             if($login->rowCount() > 0) {
-
-                if(password_verify($password, $row['mypassword'])){
-                    
-
-                    $_SESSION['username'] = $row['username'];
-                    $_SESSION['user_id'] = $row['id'];
-                   
-
-                    header('location: http://localhost/clean-blog/index.php');
-                } else {
-
-                  echo "<div class='alert alert-danger  text-center text-white role='alert'>
-                            the email or password is wrong
-                        </div>";
-                 }
-
-
-             } else {
-
-              echo "<div class='alert alert-danger  text-center  role='alert'>
-                        the email or password is wrong
-                    </div>";
-             }
+            $error = "The email or password is wrong";
         }
     }
-
-
-
-
+}
 ?>
 
-               <form method="POST" action="login.php">
-                  <!-- Email input -->
-                  <div class="form-outline mb-4">
-                    <input type="email" name="email" id="form2Example1" class="form-control" placeholder="Email" />
-                   
-                  </div>
+<?php require "../includes/header.php"; ?>
 
-                  
-                  <!-- Password input -->
-                  <div class="form-outline mb-4">
-                    <input type="password" name="password" id="form2Example2" placeholder="Password" class="form-control" />
-                    
-                  </div>
+<!-- Show error if any -->
+<?php if (isset($error)): ?>
+    <div class='alert alert-danger text-center' role='alert'>
+        <?= $error ?>
+    </div>
+<?php endif; ?>
 
+<form method="POST" action="login.php">
+    <div class="form-outline mb-4">
+        <input type="email" name="email" class="form-control" placeholder="Email" />
+    </div>
 
+    <div class="form-outline mb-4">
+        <input type="password" name="password" class="form-control" placeholder="Password" />
+    </div>
 
-                  <!-- Submit button -->
-                  <button type="submit" name="submit" class="btn btn-primary  mb-4 text-center">Login</button>
+    <button type="submit" name="submit" class="btn btn-primary mb-4 text-center">Login</button>
 
-                  <!-- Register buttons -->
-                  <div class="text-center">
-                    <p>a new member? Create an acount<a href="register.php"> Register</a></p>
-                    
-
-                   
-                  </div>
-                </form>
+    <div class="text-center">
+        <p>A new member? Create an account <a href="register.php">Register</a></p>
+    </div>
+</form>
 
 <?php require "../includes/footer.php"; ?>
-      

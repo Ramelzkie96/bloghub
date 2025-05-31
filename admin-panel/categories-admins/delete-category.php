@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../../config/config.php'; ?>
 <?php //require "../includes/navbar.php"; ?>
 
 
@@ -16,11 +17,11 @@
 
        
 
-       header('location: http://localhost/clean-blog/admin-panel/categories-admins/show-categories.php');
+       header("location: " . BASE_URL . "admin-panel/categories-admins/show-categories.php");
 
         
     }  else {
-        header("location: http://localhost/clean-blog/404.php");
+        header("location: " . BASE_URL . "404.php");
        
     }  
 

@@ -1,9 +1,10 @@
+<?php require_once __DIR__ . '/../../config/config.php'; ?>
 <?php require "../layouts/header.php"; ?>
 <?php require "../../config/config.php"; ?>
 <?php 
 
     if(!isset($_SESSION['adminname'])) {
-      header("location: http://localhost/clean-blog/admin-panel/admins/login-admins.php");
+      header("location: " . BASE_URL . "admin-panel/admins/login-admins.php");
     }
 
     
@@ -40,9 +41,9 @@
                       <td><?php echo $row->name; ?></td>
                       <td><?php echo $row->user_name; ?></td>
                       <?php if($row->status == 0) : ?>
-                        <td><a href="status-posts.php?status=<?php echo $row->status; ?>&id=<?php echo $row->id; ?>" class="btn btn-danger  text-center ">deactivated</a></td>
+                        <td><a href="status-posts.php?status=<?php echo $row->status; ?>&id=<?php echo $row->id; ?>" class="btn btn-success  text-center ">Approved</a></td>
                       <?php else : ?>
-                        <td><a href="status-posts.php?status=<?php echo $row->status; ?>&id=<?php echo $row->id; ?>" class="btn btn-primary  text-center ">activated</a></td>
+                        <td><a href="status-posts.php?status=<?php echo $row->status; ?>&id=<?php echo $row->id; ?>" class="btn btn-danger  text-center ">Rejected</a></td>
                       <?php endif; ?>  
                       <td><a href="delete-posts.php?po_id=<?php echo $row->id; ?>" class="btn btn-danger  text-center ">delete</a></td>
                     </tr>

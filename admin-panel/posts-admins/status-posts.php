@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../../config/config.php'; ?>
 <?php require "../../config/config.php"; ?>
 
 
@@ -5,7 +6,7 @@
 
 
     if(!isset($_SESSION['adminname'])) {
-        header("location: http://localhost/clean-blog/admin-panel/admins/login-admins.php");
+        header("location: " . BASE_URL . "admin-panel/admins/login-admins.php");
     }
 
     if(isset($_GET['id']) AND isset($_GET['status'])) {
@@ -21,7 +22,7 @@
 
                     $update->execute();
 
-                    header('location: http://localhost/clean-blog/admin-panel/posts-admins/show-posts.php');
+                    header("location: " . BASE_URL . "admin-panel/posts-admins/show-posts.php");
                     
 
             } else {
@@ -29,14 +30,14 @@
 
                     $update->execute();
 
-                    header('location: http://localhost/clean-blog/admin-panel/posts-admins/show-posts.php');
+                    header("location: " . BASE_URL . "admin-panel/posts-admins/show-posts.php");
             
             }
 
 
 
       } else {
-        header("location: http://localhost/clean-blog/404.php");
+        header("location: " . BASE_URL . "404.php");
       
       }
 

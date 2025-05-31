@@ -1,10 +1,11 @@
+<?php require_once __DIR__ . '/../../config/config.php'; ?>
 <?php require "../layouts/header.php"; ?>
 <?php require "../../config/config.php"; ?>
 
 <?php 
 
     if(isset($_SESSION['adminname'])) {
-       header("location: http://localhost/clean-blog/admin-panel/index.php");
+       header("location: " . BASE_URL . "admin-panel/index.php");
     }
 
     if(isset($_POST['submit'])) {
@@ -31,7 +32,7 @@
                     $_SESSION['admin_id'] = $row['id'];
                   
 
-                    header('location: http://localhost/clean-blog/admin-panel/index.php');
+                    header("location: " . BASE_URL . "admin-panel/index.php");
                 } else {
 
                   echo "<div class='alert alert-danger  text-center text-white role='alert'>

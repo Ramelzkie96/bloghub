@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../../config/config.php'; ?>
 <?php require "../layouts/header.php"; ?>
 <?php require "../../config/config.php"; ?>
 
@@ -8,7 +9,7 @@
       $id = $_GET['up_id'];
 
       if(!isset($_SESSION['adminname'])) {
-        header("location: http://localhost/clean-blog/admin-panel/admins/login-admins.php");
+        header("location: " . BASE_URL . "admin-panel/admins/login-admins.php");
       }
 
       $select = $conn->query("SELECT * FROM categories WHERE id = '$id'");
@@ -35,7 +36,7 @@
                       
               ]);
 
-              header('location: http://localhost/clean-blog/admin-panel/categories-admins/show-categories.php');
+              header("location: " . BASE_URL . "admin-panel/categories-admins/show-categories.php");
             }
 
       }
@@ -43,7 +44,7 @@
 
 
       } else {
-        header("location: http://localhost/clean-blog/404.php");
+        header("location: " . BASE_URL . "404.php");
       
       }
 

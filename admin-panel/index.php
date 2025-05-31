@@ -1,10 +1,11 @@
+<?php require_once __DIR__ . '/../config/config.php'; ?>
 <?php require "layouts/header.php"; ?>
 <?php require "../config/config.php"; ?>
 
 <?php 
 
       if(!isset($_SESSION['adminname'])) {
-        header("location: http://localhost/clean-blog/admin-panel/admins/login-admins.php");
+        header("location: " . BASE_URL . "admin-panel/admins/login-admins.php");
       }
 
       

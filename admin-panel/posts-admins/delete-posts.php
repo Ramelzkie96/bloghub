@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../../config/config.php'; ?>
 <?php require "../../config/config.php"; ?>
 
 
@@ -11,11 +12,11 @@
                 ':id' => $id
         ]);
     
-       header('location: http://localhost/clean-blog/admin-panel/posts-admins/show-posts.php');
+       header("location: " . BASE_URL . "admin-panel/posts-admins/show-posts.php");
 
         
     }  else {
-        header("location: http://localhost/clean-blog/404.php");
+        header("location: " . BASE_URL . "404.php");
        
     }  
 

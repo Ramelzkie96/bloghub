@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/./config/config.php'; ?>
 <?php require "includes/navbar.php"; ?>
 
         <div class="d-flex align-items-center justify-content-center vh-100">
@@ -7,7 +8,7 @@
                 <p class="lead">
                     The page you’re looking for doesn’t exist.
                   </p>
-                <a href="http://localhost/clean-blog/index.php" class="btn btn-primary">Go Home</a>
+                <a href="<?php echo BASE_URL; ?>index.php" class="btn btn-primary">Go Home</a>
             </div>
         </div>
     </body>

@@ -1,39 +1,37 @@
-<?php require "../includes/navbar.php"; ?>
-
-
-<?php require "../config/config.php"; ?>
-
+<?php require_once __DIR__ . '/../config/config.php'; ?>
 <?php 
+session_start();
+require "../config/config.php";
 
-    if(isset($_GET['del_id'])) {
-        $id = $_GET['del_id'];
+if (isset($_GET['del_id'])) {
+    $id = $_GET['del_id'];
 
-        $select = $conn->query("SELECT * FROM posts WHERE id =' $id'");
-        $select->execute();
-        $posts = $select->fetch(PDO::FETCH_OBJ);
+    $select = $conn->prepare("SELECT * FROM posts WHERE id = :id");
+    $select->execute([':id' => $id]);
+    $post = $select->fetch(PDO::FETCH_OBJ);
 
-        if($_SESSION['user_id'] !== $posts->user_id) {
-            header('location: http://localhost/clean-blog/index.php');
+    if (!$post) {
+        header("location: " . BASE_URL . "404.php");
+        exit;
+    }
 
-        } else {
-            unlink("images/" . $posts->img . "");
+    if ($_SESSION['user_id'] != $post->user_id) {
+        header("location: " . BASE_URL . "index.php");
+        exit;
+    }
 
+    if (!empty($post->img) && file_exists("images/" . $post->img)) {
+        unlink("images/" . $post->img);
+    }
 
+    $delete = $conn->prepare("DELETE FROM posts WHERE id = :id");
+    $delete->execute([':id' => $id]);
 
-            $delete = $conn->prepare("DELETE FROM posts WHERE id = :id");
-            $delete->execute([
-                ':id' => $id
-            ]);
-        }
-
-       
-
-        header('location: http://localhost/clean-blog/index.php');
-
-        
-    }  else {
-        header("location: http://localhost/clean-blog/404.php");
-       
-    }  
-
-?>
+    $_SESSION['toastrSuccess'] = "Post deleted successfully!";
+    header("location: " . BASE_URL . "index.php");
+    exit;
+    
+} else {
+    header("location: " . BASE_URL . "404.php");
+    exit;
+}

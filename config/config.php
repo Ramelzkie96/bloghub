@@ -1,33 +1,21 @@
 <?php
 
-    try {
-        //host
-        $host = "localhost";
+if (!defined("BASE_URL")) {
+    $isLocalhost = $_SERVER['HTTP_HOST'] === 'localhost';
 
-        //dbname
-        $dbname = "cleanblog";
+    define("BASE_URL", $isLocalhost ? "http://localhost/clean-blog/" : "https://bloghub-website.infinityfreeapp.com/");
+}
 
-        //user
-        $user = "root";
+try {
+    $host = "sql303.infinityfree.com";
+    $dbname = "if0_39102576_cleanblog";
+    $user = "if0_39102576";
+    $pass = "RM4cPYJhKjTr5";
 
-        //pass
-        $pass = "";
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+} catch(PDOException $e) {
+    echo $e->getMessage();
+}
 
-        $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    } catch(PDOException $e) {
-        echo $e->getMessage();
-
-    }
-
-
-    
-
-
-    // if($conn == true) {
-    //     echo "conn works fine";
-    // } else {
-    //     echo "conn err";
-    // }

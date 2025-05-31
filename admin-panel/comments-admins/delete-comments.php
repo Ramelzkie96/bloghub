@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../../config/config.php'; ?>
 <?php require "../../config/config.php"; ?>
 
 
@@ -12,10 +13,10 @@
         ]);
      
 
-       header('location: http://localhost/clean-blog/admin-panel/comments-admins/show-comments.php');
+       header("location: " . BASE_URL . "admin-panel/comments-admins/show-comments.php");
         
     }  else {
-        header("location: http://localhost/clean-blog/404.php");
+        header("location: " . BASE_URL . "404.php");
        
     }  
 

@@ -1,74 +1,66 @@
-<?php require  "../includes/header.php"; ?>
-<?php require  "../config/config.php"; ?>
-
+<?php require_once __DIR__ . '/../config/config.php'; ?>
 <?php
+session_start(); // Always first
 
-  if(isset($_SESSION['username'])) {
-    header("location: http://localhost/clean-blog/index.php");
-  }
+require "../config/config.php";
 
+if (isset($_SESSION['username'])) {
+    header("location: " . BASE_URL . "index.php");
+    exit;
+}
 
-  if(isset($_POST['submit'])) {
+$errorMessage = '';
 
-      if($_POST['email'] == '' OR $_POST['username'] == '' OR $_POST['password'] == '') {
-        echo "<div class='alert alert-danger  text-center  role='alert'>
-                 enter data into the inputs
-              </div>";
-      } else {
+if (isset($_POST['submit'])) {
+    if ($_POST['email'] == '' || $_POST['username'] == '' || $_POST['password'] == '') {
+        $errorMessage = "Please fill in all fields.";
+    } else {
         $email = $_POST['email'];
         $username = $_POST['username'];
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-        $insert  = $conn->prepare("INSERT INTO users (email, username, mypassword) VALUES
-        (:email, :username, :mypassword)");
-
+        $insert = $conn->prepare("INSERT INTO users (email, username, mypassword) VALUES (:email, :username, :mypassword)");
         $insert->execute([
-          ':email' => $email,
-          ':username' => $username,
-          ':mypassword' => $password
+            ':email' => $email,
+            ':username' => $username,
+            ':mypassword' => $password
         ]);
 
-        header("location: login.php");
-
-
-
-      }
-    
-  }
-
+        header("Location: login.php");
+        exit;
+    }
+}
 ?>
 
-            <form method="POST" action="register.php">
-              <!-- Email input -->
-              <div class="form-outline mb-4">
-                <input type="email" name="email" id="form2Example1" class="form-control" placeholder="Email" />
-               
-              </div>
+<?php require "../includes/header.php"; ?>
 
-              <div class="form-outline mb-4">
-                <input type="" name="username" id="form2Example1" class="form-control" placeholder="Username" />
-               
-              </div>
+<div class="container py-5">
+    <?php if (!empty($errorMessage)) : ?>
+        <div class="alert alert-danger text-center" role="alert">
+            <?= htmlspecialchars($errorMessage) ?>
+        </div>
+    <?php endif; ?>
 
-              <!-- Password input -->
-              <div class="form-outline mb-4">
-                <input type="password" name="password" id="form2Example2" placeholder="Password" class="form-control" />
-                
-              </div>
+    <form method="POST" action="register.php">
+        <div class="form-outline mb-4">
+            <input type="email" name="email" class="form-control" placeholder="Email" />
+        </div>
 
+        <div class="form-outline mb-4">
+            <input type="text" name="username" class="form-control" placeholder="Username" />
+        </div>
 
+        <div class="form-outline mb-4">
+            <input type="password" name="password" class="form-control" placeholder="Password" />
+        </div>
 
-              <!-- Submit button -->
-              <button type="submit" name="submit" class="btn btn-primary  mb-4 text-center">Register</button>
+        <button type="submit" name="submit" class="btn btn-primary mb-4 text-center">Register</button>
 
-              <!-- Register buttons -->
-              <div class="text-center">
-                <p>Aleardy a member? <a href="login.php">Login</a></p>
-                
+        <div class="text-center">
+            <p>Already a member? <a href="login.php">Login</a></p>
+        </div>
+    </form>
+</div>
 
-               
-              </div>
-            </form>
+<?php require "../includes/footer.php"; ?>
 
-
-<?php require  "../includes/footer.php"; ?>      

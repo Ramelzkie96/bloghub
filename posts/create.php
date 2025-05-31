@@ -1,100 +1,121 @@
-<?php require "../includes/header.php"; ?>
-<?php require "../config/config.php"; ?>
 
+<?php require_once __DIR__ . '/../config/config.php'; ?>
+<?php
+require_once __DIR__ . '/../config/config.php';
 
-<?php   
+session_start();
+require "../config/config.php";
 
+// Fetch categories
+$categories = $conn->query("SELECT * FROM categories");
+$categories->execute();
+$category = $categories->fetchAll(PDO::FETCH_OBJ);
 
+if (isset($_POST['submit'])) {
+    $title = $_POST['title'] ?? '';
+    $subtitle = $_POST['subtitle'] ?? '';
+    $body = $_POST['body'] ?? '';
+    $category_id = $_POST['category_id'] ?? '';
 
-    $categories = $conn->query("SELECT * FROM categories");
-    $categories->execute();
-    $category = $categories->fetchAll(PDO::FETCH_OBJ);
+    if ($title == '' || $subtitle == '' || $body == '') {
+        $toastrError = "Please fill in all required fields.";
+    } elseif ($category_id == '' || $category_id == 'Choose a category') {
+        $toastrError = "Please select a valid category.";
+    } else {
+        $user_id = $_SESSION['user_id'];
+        $user_name = $_SESSION['username'];
 
-    if(isset($_POST['submit'])) {
-        if($_POST['title'] == '' OR $_POST['subtitle'] == '' OR 
-        $_POST['body'] == '' OR $_POST['category_id'] == '') {
-          echo "<div class='alert alert-danger  text-center  role='alert'>
-                  enter data into the inputs
-           </div>";
-        } else {
-
-          
-
-            
-
-
-            $title = $_POST['title'];
-            $subtitle = $_POST['subtitle'];
-            $body = $_POST['body'];
-            $category_id = $_POST['category_id'];
+        if (isset($_FILES['img']) && $_FILES['img']['error'] == 0) {
             $img = $_FILES['img']['name'];
-            $user_id = $_SESSION['user_id'];
-            $user_name = $_SESSION['username'];
+            $tmpName = $_FILES['img']['tmp_name'];
+            $mimeType = mime_content_type($tmpName);
 
-            $dir = 'images/' . basename($img);
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-            $insert = $conn->prepare("INSERT INTO posts (title, subtitle, body, category_id,  img, user_id, user_name) 
-            VALUES (:title, :subtitle, :body, :category_id, :img, :user_id, :user_name)");
+            if (!in_array($mimeType, $allowedTypes)) {
+                $toastrError = "Invalid file type. Please upload a valid image (JPG, PNG, GIF, or WEBP).";
+            } else {
+                $dir = 'images/' . basename($img);
 
-            $insert->execute([
-                ':title' => $title,
-                ':subtitle' => $subtitle,
-                ':body' => $body,
-                ':category_id' => $category_id,
-                ':img' => $img,
-                ':user_id' => $user_id,
-                ':user_name' => $user_name,
-            ]);
+                $insert = $conn->prepare("INSERT INTO posts (title, subtitle, body, category_id, img, user_id, user_name) 
+                    VALUES (:title, :subtitle, :body, :category_id, :img, :user_id, :user_name)");
 
-            if(move_uploaded_file($_FILES['img']['tmp_name'], $dir)) {
-                header('location: http://localhost/clean-blog/index.php');
+                $insert->execute([
+                    ':title' => $title,
+                    ':subtitle' => $subtitle,
+                    ':body' => $body,
+                    ':category_id' => $category_id,
+                    ':img' => $img,
+                    ':user_id' => $user_id,
+                    ':user_name' => $user_name,
+                ]);
+
+                if (move_uploaded_file($tmpName, $dir)) {
+                    $_SESSION['toastrSuccess'] = "Post submitted successfully! It needs to be approved by an admin before it appears.";
+                    header("location: " . BASE_URL . "index.php");
+                    exit();
+                }
+
             }
-
-       
-
+        } else {
+            $toastrError = "Please upload an image.";
         }
     }
-
-
+}
 
 ?>
 
-            <form method="POST" action="create.php" enctype="multipart/form-data">
-              <!-- Email input -->
-              <div class="form-outline mb-4">
-                <input type="text" name="title" id="form2Example1" class="form-control" placeholder="title" />
-               
-              </div>
+<?php require "../includes/header.php"; ?>
 
-              <div class="form-outline mb-4">
-                <input type="text" name="subtitle" id="form2Example1" class="form-control" placeholder="subtitle" />
-            </div>
+<?php if (isset($error)): ?>
+    <div class='alert alert-danger text-center' role='alert'>
+        <?= $error ?>
+    </div>
+<?php endif; ?>
 
-              <div class="form-outline mb-4">
-                <textarea type="text" name="body" id="form2Example1" class="form-control" placeholder="body" rows="8"></textarea>
-            </div>
-            <div class="form-outline mb-4">
+<form method="POST" action="create.php" enctype="multipart/form-data">
+    <div class="form-outline mb-4">
+        <input type="text" name="title" class="form-control" placeholder="Title" />
+    </div>
 
-              <select name="category_id" class="form-select" aria-label="Default select example">
-                <option selected>Open this select menu</option>
-                <?php foreach($category as $cat) : ?>
-                  <option value="<?php echo $cat->id; ?>"><?php echo $cat->name; ?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
+    <div class="form-outline mb-4">
+        <input type="text" name="subtitle" class="form-control" placeholder="Subtitle" />
+    </div>
 
-              
-             <div class="form-outline mb-4">
-                <input type="file" name="img" id="form2Example1" class="form-control" placeholder="image" />
-            </div>
+    <div class="form-outline mb-4">
+        <textarea name="body" class="form-control" placeholder="Body" rows="8"></textarea>
+    </div>
+
+    <div class="form-outline mb-4">
+        <select name="category_id" class="form-select" aria-label="Select category" required>
+            <option value="" selected disabled>Choose a category</option>
+            <?php foreach ($category as $cat): ?>
+                <option value="<?= $cat->id ?>"><?= $cat->name ?></option>
+            <?php endforeach; ?>
+        </select>
+
+    </div>
+
+    <div class="form-outline mb-4">
+        <input type="file" name="img" class="form-control" />
+    </div>
+
+    <button type="submit" name="submit" class="btn btn-primary mb-4">Create</button>
+</form>
+
+<?php if (isset($toastrError)): ?>
+<script>
+    $(document).ready(function() {
+        toastr.options = {
+            "positionClass": "toast-bottom-right", // 👈 ensures bottom right
+            "closeButton": true,
+            "progressBar": true,
+            "timeOut": "5000"
+        };
+        toastr.error("<?= addslashes($toastrError) ?>");
+    });
+</script>
+<?php endif; ?>
 
 
-              <!-- Submit button -->
-              <button type="submit" name="submit" class="btn btn-primary  mb-4 text-center">create</button>
-
-          
-            </form>
-
-
-           
 <?php require "../includes/footer.php"; ?>

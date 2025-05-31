@@ -1,9 +1,10 @@
+<?php require_once __DIR__ . '/../../config/config.php'; ?>
 <?php require "../layouts/header.php"; ?>
 <?php require "../../config/config.php"; ?>
 <?php 
 
     if(!isset($_SESSION['adminname'])) {
-      header("location: http://localhost/clean-blog/admin-panel/admins/login-admins.php");
+      header("location: " . BASE_URL . "admin-panel/admins/login-admins.php");
     }
 
     
@@ -42,11 +43,11 @@
                       <td><?php echo $row->comment; ?></td>
                       <td><?php echo $row->user_name_comment; ?></td>
                       <?php if($row->status_comment == 0) : ?>
-                        <td><a href="http://localhost/clean-blog/admin-panel/comments-admins/status-comments.php?comment_id=<?php echo $row->comment_id; ?>&status_comment=<?php echo $row->status_comment; ?>" class="btn btn-danger  text-center ">deactivated</a></td>
+                        <td><a href="<?php echo BASE_URL; ?>admin-panel/comments-admins/status-comments.php?comment_id=<?php echo $row->comment_id; ?>&status_comment=<?php echo $row->status_comment; ?>" class="btn btn-success  text-center ">Visible</a></td>
                       <?php else : ?>
-                        <td><a href="http://localhost/clean-blog/admin-panel/comments-admins/status-comments.php?comment_id=<?php echo $row->comment_id; ?>&status_comment=<?php echo $row->status_comment; ?>" class="btn btn-success  text-center ">activated</a></td>
+                        <td><a href="<?php echo BASE_URL; ?>admin-panel/comments-admins/status-comments.php?comment_id=<?php echo $row->comment_id; ?>&status_comment=<?php echo $row->status_comment; ?>" class="btn btn-primary  text-center ">Hide</a></td>
                       <?php endif; ?>  
-                      <td><a href="http://localhost/clean-blog/admin-panel/comments-admins/delete-comments.php?comment_id=<?php echo $row->comment_id; ?>" class="btn btn-danger  text-center ">delete</a></td>
+                      <td><a href="<?php echo BASE_URL; ?>admin-panel/comments-admins/delete-comments.php?comment_id=<?php echo $row->comment_id; ?>" class="btn btn-danger  text-center ">delete</a></td>
                     </tr>
                  <?php endforeach; ?>
                 </tbody>
