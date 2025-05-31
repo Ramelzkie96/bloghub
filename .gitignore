@@ -1,1 +1,3 @@
-config/config.php
+# .gitignore
+config/
+SQL_FILE/
